@@ -1,4 +1,4 @@
-import math
+import math, warnings
 
 class BaseNumber:
     '''
@@ -18,6 +18,8 @@ class BaseNumber:
         self.width = len(base_number_list[0])
         self.height = len(base_number_list)
         self.len = len(self.string)
+
+        #warnings.warn("Reminder: Check if base number is prime already")
 
     def print(self):
         '''

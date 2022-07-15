@@ -31,7 +31,7 @@ def primesfrom2to(n):
     return np.r_[2,3,((3*np.nonzero(sieve)[0][1:]+1)|1)]
 
 
-def compute_ten_to_the_a_mod_p(primes,H=1000):
+def compute_ten_to_the_a_mod_p(primes,H=1):
     '''
     Computes 10^a mod p for p in primes and a in range(H)
 
@@ -40,10 +40,15 @@ def compute_ten_to_the_a_mod_p(primes,H=1000):
     :param H: The maximum exponent to go up to
     :return: An array of size (len(primes), H) with (i,j)-th entry 10^(j+1) % primes[i]
     '''
-    ten_mod_p = 10 % primes
-    ten_to_the_a_mod_p = np.tile(ten_mod_p, (H, 1))  # Has shape (num_primes,H)
 
-    for a in range(1, H):
-        ten_to_the_a_mod_p[a, :] = (ten_to_the_a_mod_p[a - 1, :] * ten_mod_p) % primes
+    primes = primes.astype(int)
+    ten_mod_p = (10 % primes).astype(int)
+    ten_to_the_a_mod_p = (10 % primes).astype(int)
+    print("Go")
+    with open('data/temp_ten_to_the_a_mod_p.txt', 'ab') as fp:
+        np.savetxt(fp, ten_mod_p,newline=', ')
+        #for i in range(H-1):
+        #    ten_to_the_a_mod_p = (ten_to_the_a_mod_p * ten_mod_p) % primes
+        #    fp.write(f',\n{arr2str(ten_to_the_a_mod_p)}')
 
     return ten_to_the_a_mod_p
