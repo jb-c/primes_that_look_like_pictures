@@ -19,7 +19,7 @@ def main(K = 1, big_P = 1_000_000):
     # Store the result in a pickle, load to save time
     if cache_mode == 0:
         base_number = BaseNumber('data/base_number.txt')
-        primes = primesfrom2to(1_00) # 982_451_653+1
+        primes = primesfrom2to(big_P) # 982_451_653+1
         b_mod_p = base_number.int % primes
         with open('data/cache.pickle', 'wb') as fp:
             pickle.dump([base_number,primes,b_mod_p], fp)
@@ -27,7 +27,7 @@ def main(K = 1, big_P = 1_000_000):
         with open('data/cache.pickle', 'rb') as fp:
             [base_number,primes,b_mod_p] = pickle.load(fp)
 
-    if verbose: print(f'1. Computed base number mod p.')
+    if verbose: print(f'1. Computed base number mod p. We are using {len(primes)} primes.')
 
     s = np.arange(1,10**K) # The numbers up to 10**K
     s = np.concatenate([-np.flip(s),s]) # Include the negative shifts as well - nb zero not included
@@ -38,8 +38,8 @@ def main(K = 1, big_P = 1_000_000):
     tuples_to_check = np.zeros([1,2])
 
     # Check if [b + (s * 10**a)] % p == 0
-    for a in tqdm(range(1,base_number.len - K), desc='\t Sieve Checks'):
-        digits = int(base_number.string[a:a + K])
+    for a in tqdm(range(0,base_number.len - K), desc='Sieve Checks'):
+        digits = int(base_number.string[base_number.len - K - a :base_number.len - a])
         s_is_valid = (s > -digits) & (s < 10 ** K - digits)  # ex: If digits = 87 then anything bigger than 12 is an invalid shift
 
         valid_shifts_mod_p = (b_mod_p + (np.atleast_2d(s[s_is_valid]).T * ten_to_the_a_mod_p)) % primes
